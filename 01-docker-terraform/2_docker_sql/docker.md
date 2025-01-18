@@ -153,4 +153,139 @@ while True:
     t_end = time()
 
     print('inserted another chunk, took %.3f second' % (t_end - t_start))
+```
 
+----
+----
+----
+----
+----
+----
+----
+----
+
+# Running Postgres and pgAdmin together
+
+## Create a network (both containers need visibility to each other)
+```bash
+docker network create pg-network
+```
+
+## Run Postgres (change the path)
+```bash
+docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v ./ny_taxi_postgres_data:/var/lib/postgresql/data:rw \
+  -p 5432:5432 \
+  --network=pg-network \
+  --name pg-database \
+  postgres:13
+```
+
+## Run pgAdmin
+```bash
+docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  --network=pg-network \
+  --name pgadmin-2 \
+  dpage/pgadmin4
+```
+
+## Error: Container already in use
+If you encounter this error, delete the existing container before re-creating it:
+```bash
+docker rm pg-database
+docker rm pgadmin-2
+```
+
+## Delete all stopped containers
+```bash
+docker container prune
+```
+
+---
+
+# Convert the notebook to script
+```bash
+jupyter nbconvert --to=script upload-data.ipynb
+```
+
+## Docker-compose for simplification
+Instead of running commands in two terminals, use Docker-compose.
+
+## Example ingestion script:
+```bash
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+
+python ingest_data.py \
+  --user=root \
+  --password=root \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --url=${URL}
+```
+
+## Build Docker image
+```bash
+docker build -t taxi_ingest:v001 .
+```
+
+## Check exit status
+- `0` indicates success.
+- Non-zero values indicate failure.
+```bash
+echo $?
+```
+
+## Python library for accessing Postgres
+`psycopg2` is required and needs to be installed.
+
+## Run the script with Docker Compose
+```bash
+docker-compose up -d
+docker-compose down
+```
+
+## Run the ingestion script with Docker
+Ensure the container is on the same network as Postgres/pgAdmin.
+```bash
+docker run -it \
+  --network=2_docker_sql_default \
+  taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pgdatabase \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+```
+
+## Verify Docker network
+List all networks:
+```bash
+docker network ls
+```
+Inspect a specific network:
+```bash
+docker network inspect 2_docker_sql_default
+```
+
+---
+
+# Serve files with Python
+Open a server on port 8000 to serve all files in the current directory:
+```bash
+python -m http.server
+```
+
+## Check network configuration
+```bash
+ipconfig  # On Windows
+ifconfig  # On Linux/Mac
