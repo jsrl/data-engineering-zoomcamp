@@ -6,14 +6,28 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=ny_taxi
     volumes:
-      - "./data/ny_taxi_postgres_data:/var/lib/postgresql/data:rw"
+      - "ny_taxi_postgres_data:/var/lib/postgresql/data:rw" #volume for data persistency
     ports:
       - "5432:5432"
+    networks:
+      - my_network
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+      - "pgadmin_conn_data:/var/lib/pgadmin:rw" # Volume for pgadmin db config persistency
     ports:
       - "8080:80"
-    
+    networks:
+      - my_network
+
+volumes:
+  pgadmin_conn_data:
+  ny_taxi_postgres_data:
+
+networks:
+  my_network:
+    driver: bridge
