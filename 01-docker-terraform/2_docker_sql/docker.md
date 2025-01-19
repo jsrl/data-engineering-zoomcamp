@@ -320,3 +320,28 @@ Building docker image and running it
 docker build -t test:pandas .
 docker run -it test:pandas 2022-01-01
 ```
+
+---
+---
+# Docker Network Management
+
+## List Your Docker Networks
+```bash
+docker network ls
+```
+
+## See Network Information of a Single Container
+```bash
+docker inspect <first three characters of Container ID>
+```
+
+## Launch a Container into an Existing Network
+```bash
+docker run -d --name <Optional container name> --network <Docker Network Name> <Docker Image>
+```
+
+## Join a Running Container to an Existing Network
+```bash
+docker network connect <Docker Network Name> <Container Name or First Three Characters of Container ID>
+```
+
