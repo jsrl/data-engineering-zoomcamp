@@ -277,6 +277,8 @@ Inspect a specific network:
 docker network inspect 2_docker_sql_default
 ```
 
+![Texto alternativo](../../images/personal/port_forwarding.png "Título opcional")
+
 ---
 
 # Serve files with Python
