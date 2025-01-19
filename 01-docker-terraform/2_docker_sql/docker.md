@@ -291,3 +291,32 @@ python -m http.server
 ```bash
 ipconfig  # On Windows
 ifconfig  # On Linux/Mac
+```
+---
+
+## Docker runs
+```bash
+docker run hello-world  
+docker run -it ubuntu bash 
+docker run -it python:3.9
+docker run -it --entrypoint=bash python:3.9
+```
+
+## Dockerfile example for executing python file with pandas
+```bash
+FROM python:3.9
+
+RUN pip install pandas
+
+WORKDIR /app
+
+COPY pipeline.py pipeline.py
+
+ENTRYPOINT ["python","pipeline.py"]
+```
+
+Building docker image and running it
+```bash
+docker build -t test:pandas .
+docker run -it test:pandas 2022-01-01
+```
