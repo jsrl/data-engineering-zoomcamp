@@ -110,8 +110,17 @@ Answers:
 - 104,802;  198,924;  109,603;  27,678;  35,189
 - 104,793;  201,407;  110,612;  27,831;  35,281
 - 104,793;  202,661;  109,603;  27,678;  35,189
-- 104,838;  199,013;  109,645;  27,688;  35,202
+- **104,838;  199,013;  109,645;  27,688;  35,202 <-**
 
+```sql
+select
+	SUM(CASE WHEN trip_distance <= 1 THEN 1 ELSE 0 END) AS up_to_one_count,
+	SUM(CASE WHEN trip_distance > 1 AND trip_distance <= 3 THEN 1 ELSE 0 END) AS one_three_count,
+	SUM(CASE WHEN trip_distance > 3 AND trip_distance <= 7 THEN 1 ELSE 0 END) AS three_seven_count,
+	SUM(CASE WHEN trip_distance > 7 AND trip_distance <= 10 THEN 1 ELSE 0 END) AS seven_ten_count,
+	SUM(CASE WHEN trip_distance >10 THEN 1 ELSE 0 END) AS over_ten_count
+from green_tripdata;
+```
 
 ## Question 4. Longest trip for each day
 
