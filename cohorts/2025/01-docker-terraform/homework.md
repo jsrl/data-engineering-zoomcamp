@@ -107,19 +107,22 @@ During the period of October 1st 2019 (inclusive) and November 1st 2019 (exclusi
 Answers:
 
 - 104,802;  197,670;  110,612;  27,831;  35,281
-- 104,802;  198,924;  109,603;  27,678;  35,189
+- **104,802;  198,924;  109,603;  27,678;  35,189 <-**
 - 104,793;  201,407;  110,612;  27,831;  35,281
 - 104,793;  202,661;  109,603;  27,678;  35,189
-- **104,838;  199,013;  109,645;  27,688;  35,202 <-**
+- 104,838;  199,013;  109,645;  27,688;  35,202
 
 ```sql
-select
+SELECT
 	SUM(CASE WHEN trip_distance <= 1 THEN 1 ELSE 0 END) AS up_to_one_count,
 	SUM(CASE WHEN trip_distance > 1 AND trip_distance <= 3 THEN 1 ELSE 0 END) AS one_three_count,
 	SUM(CASE WHEN trip_distance > 3 AND trip_distance <= 7 THEN 1 ELSE 0 END) AS three_seven_count,
 	SUM(CASE WHEN trip_distance > 7 AND trip_distance <= 10 THEN 1 ELSE 0 END) AS seven_ten_count,
 	SUM(CASE WHEN trip_distance >10 THEN 1 ELSE 0 END) AS over_ten_count
-from green_tripdata;
+FROM green_tripdata
+WHERE lpep_pickup_datetime >= '2019-10-01 00:00:00'
+	  AND lpep_pickup_datetime < '2019-11-01 00:00:00'
+	  AND lpep_dropoff_datetime < '2019-11-01 00:00:00';
 ```
 
 ## Question 4. Longest trip for each day
@@ -132,7 +135,31 @@ Tip: For every day, we only care about one single trip with the longest distance
 - 2019-10-11
 - 2019-10-24
 - 2019-10-26
-- 2019-10-31
+- **2019-10-31 <-**
+
+```sql
+WITH cte_max_trip AS (
+  SELECT 
+    DATE(lpep_pickup_datetime) AS pickup_date, 
+    MAX(trip_distance) AS max_distance         
+  FROM green_tripdata
+  GROUP BY DATE(lpep_pickup_datetime) 
+)
+SELECT 
+  pickup_date,
+  max_distance
+FROM cte_max_trip
+WHERE max_distance = (SELECT MAX(max_distance) FROM cte_max_trip);
+```
+Or ignoring the tip...
+```sql
+SELECT 
+	DATE(lpep_pickup_datetime) AS pickup_date, 
+    trip_distance AS max_distance
+FROM green_tripdata
+ORDER BY trip_distance DESC
+LIMIT 1;
+```
 
 
 ## Question 5. Three biggest pickup zones
