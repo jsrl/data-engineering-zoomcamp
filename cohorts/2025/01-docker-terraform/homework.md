@@ -121,7 +121,6 @@ SELECT
 	SUM(CASE WHEN trip_distance >10 THEN 1 ELSE 0 END) AS over_ten_count
 FROM green_tripdata
 WHERE lpep_pickup_datetime >= '2019-10-01 00:00:00'
-	  AND lpep_pickup_datetime < '2019-11-01 00:00:00'
 	  AND lpep_dropoff_datetime < '2019-11-01 00:00:00';
 ```
 
@@ -146,8 +145,7 @@ WITH cte_max_trip AS (
   GROUP BY DATE(lpep_pickup_datetime) 
 )
 SELECT 
-  pickup_date,
-  max_distance
+  pickup_date
 FROM cte_max_trip
 WHERE max_distance = (SELECT MAX(max_distance) FROM cte_max_trip);
 ```
@@ -169,11 +167,23 @@ Which were the top pickup locations with over 13,000 in
 
 Consider only `lpep_pickup_datetime` when filtering by date.
  
-- East Harlem North, East Harlem South, Morningside Heights
+- **East Harlem North, East Harlem South, Morningside Heights<-**
 - East Harlem North, Morningside Heights
 - Morningside Heights, Astoria Park, East Harlem South
 - Bedford, East Harlem North, Astoria Park
 
+```sql
+SELECT
+	COUNT(*),
+	t."Zone"
+FROM taxi_zones t LEFT JOIN green_tripdata g
+	ON t."LocationID" = g."PULocationID" 
+WHERE 
+	date(g.lpep_pickup_datetime) = '2019-10-18'
+GROUP BY t."Zone"
+HAVING SUM(total_amount) > 13000
+ORDER BY 1 DESC
+```
 
 ## Question 6. Largest tip
 
@@ -186,9 +196,38 @@ Note: it's `tip` , not `trip`
 We need the name of the zone, not the ID.
 
 - Yorkville West
-- JFK Airport
+- **JFK Airport<-**
 - East Harlem North
 - East Harlem South
+
+```sql
+WITH cte_east_harlem_pickups AS (
+    SELECT 
+        g.*,
+        t1."Zone" AS pickup_zone
+    FROM
+        green_tripdata g
+    JOIN taxi_zones t1
+        ON g."PULocationID" = t1."LocationID"
+    WHERE
+        DATE(g.lpep_pickup_datetime) >= '2019-10-01' 
+        AND DATE(g.lpep_pickup_datetime) < '2019-11-01' 
+        AND t1."Zone" = 'East Harlem North'
+)
+SELECT 
+    t2."Zone" AS dropoff_zone,
+    MAX(ct.tip_amount) AS max_tip
+FROM
+    cte_east_harlem_pickups ct
+JOIN taxi_zones t2
+    ON ct."DOLocationID" = t2."LocationID"
+GROUP BY 
+    t2."Zone"
+ORDER BY 
+    max_tip DESC
+LIMIT 1;
+
+```
 
 
 ## Terraform
