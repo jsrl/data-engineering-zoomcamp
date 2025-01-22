@@ -47,8 +47,10 @@ Complete the Quiz shown below. It’s a set of 6 multiple-choice questions to te
 4) How many rows are there for the `Green` Taxi data for the year 2020?
 - 5,327,301
 - 936,199
-- 1,734,051
+- **1,734,051 <-**
 - 1,342,034
+
+Number of rows 1,734,051
 
 5) How many rows are there for the `Yellow` Taxi data for March 2021?
 - 1,428,092
