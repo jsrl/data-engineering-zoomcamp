@@ -16,22 +16,22 @@ tasks:
     type: io.kestra.plugin.core.kv.Set
     key: GCP_PROJECT_ID
     kvType: STRING
-    value: kestra-sandbox # TODO replace with your project id
+    value: neat-axis-448121-i4 # Replace with your project id
 
   - id: gcp_location
     type: io.kestra.plugin.core.kv.Set
     key: GCP_LOCATION
     kvType: STRING
-    value: europe-west2
+    value: US # Replace with your location
 
   - id: gcp_bucket_name
     type: io.kestra.plugin.core.kv.Set
     key: GCP_BUCKET_NAME
     kvType: STRING
-    value: your-name-kestra # TODO make sure it's globally unique!
+    value: taxis-bucket-448121-i4 # Make sure it's globally unique!
 
   - id: gcp_dataset
     type: io.kestra.plugin.core.kv.Set
     key: GCP_DATASET
     kvType: STRING
-    value: zoomcamp
+    value: taxis_dataset  # Replace with your dataset name
