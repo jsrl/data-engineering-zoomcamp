@@ -47,6 +47,13 @@ Complete the Quiz shown below. It’s a set of 6 multiple-choice questions to te
 - 29,430,127
 
   Number of rows 24,648,499
+  Also
+  ```sql
+  SELECT count(*)
+  FROM `project_id.taxis_dataset.yellow_tripdata` 
+  WHERE
+    CAST(SUBSTR(filename, 17, 4) AS INT64) = 2020;
+  ```
 
 4) How many rows are there for the `Green` Taxi data for the year 2020?
 - 5,327,301
@@ -55,14 +62,28 @@ Complete the Quiz shown below. It’s a set of 6 multiple-choice questions to te
 - 1,342,034
 
   Number of rows 1,734,051
+  Also:
+  ```sql
+  SELECT count(*)
+  FROM `project_id.taxis_dataset.green_tripdata` 
+  WHERE
+    CAST(SUBSTR(filename, 16, 4) AS INT64) = 2020;
+  ```
 
 5) How many rows are there for the `Yellow` Taxi data for March 2021?
 - 1,428,092
 - 706,911
 - **1,925,152 <-**
 - 2,561,031
-
+  
   Number of rows 1,925,152
+  Also
+  ```sql
+  SELECT count(*)
+  FROM `project_id.taxis_dataset.yellow_tripdata` 
+  WHERE
+    filename = 'yellow_tripdata_2021-03.csv';
+  ```
 
 6) How would you configure the timezone to New York in a Schedule trigger?
 - Add a `timezone` property set to `EST` in the `Schedule` trigger configuration  
