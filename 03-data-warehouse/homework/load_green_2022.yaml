@@ -1,0 +1,48 @@
+id: load_green_taxi_data_2022
+namespace: zoomcamp
+description: |
+  The Parquet Data used in the course: https://d37ci6vzurychx.cloudfront.net/trip-data/
+
+variables:
+  file: "green_tripdata_2022-{{trigger.date | date('MM')}}.parquet"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/taxi_parquet/{{vars.file}}"
+  url: "https://d37ci6vzurychx.cloudfront.net/trip-data/{{vars.file}}"
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      year: "2022"
+
+  - id: download
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "*.parquet"
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -O {{render(vars.file)}} {{render(vars.url)}}
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{outputs.download.outputFiles['green_tripdata_2022' ~ '-' ~ (trigger.date | date('MM')) ~ '.parquet']}}"
+    to: "{{render(vars.gcs_file)}}"
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: green_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"

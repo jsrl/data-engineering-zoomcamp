@@ -1,4 +1,4 @@
-id: 04_gcp_kv
+id: load_gcp_kv
 namespace: zoomcamp
 
 tasks:
@@ -8,8 +8,6 @@ tasks:
     kvType: JSON
     value: |
       {
-        "type": "service_account",
-        "project_id": "..."
         # full key here
       }
 
@@ -17,7 +15,7 @@ tasks:
     type: io.kestra.plugin.core.kv.Set
     key: GCP_PROJECT_ID
     kvType: STRING
-    value: project_id # Replace with your project id
+    value: neat-axis-448121-i4 # Replace with your project id
 
   - id: gcp_location
     type: io.kestra.plugin.core.kv.Set
@@ -31,8 +29,3 @@ tasks:
     kvType: STRING
     value: taxis-bucket-448121-i4 # Make sure it's globally unique!
 
-  - id: gcp_dataset
-    type: io.kestra.plugin.core.kv.Set
-    key: GCP_DATASET
-    kvType: STRING
-    value: taxis_dataset  # Replace with your dataset name
