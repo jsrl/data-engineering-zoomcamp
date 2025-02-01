@@ -1,32 +1,32 @@
-id: load_green_taxi_data_2022
+id: load_fhx_data_2019
 namespace: zoomcamp
 description: |
-  The Parquet Data used in the course: https://d37ci6vzurychx.cloudfront.net/trip-data/
+  The data used belongs to https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/fhv
 
 variables:
-  file: "green_tripdata_2022-{{trigger.date | date('MM')}}.parquet"
-  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/taxi_parquet/{{vars.file}}"
-  url: "https://d37ci6vzurychx.cloudfront.net/trip-data/{{vars.file}}"
+  file: "fhv_tripdata_2019-{{trigger.date | date('MM')}}.csv"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/fhv/{{vars.file}}"
+  url: "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/{{vars.file}}"
 
 tasks:
   - id: set_label
     type: io.kestra.plugin.core.execution.Labels
     labels:
       file: "{{render(vars.file)}}"
-      year: "2022"
+      year: "2019"
 
   - id: download
     type: io.kestra.plugin.scripts.shell.Commands
     outputFiles:
-      - "*.parquet"
+      - "*.csv"
     taskRunner:
       type: io.kestra.plugin.core.runner.Process
     commands:
-      - wget -O {{render(vars.file)}} {{render(vars.url)}}
+      - wget -qO- {{render(vars.url)}}.gz | gunzip > {{render(vars.file)}}
 
   - id: upload_to_gcs
     type: io.kestra.plugin.gcp.gcs.Upload
-    from: "{{outputs.download.outputFiles['green_tripdata_2022' ~ '-' ~ (trigger.date | date('MM')) ~ '.parquet']}}"
+    from: "{{outputs.download.outputFiles['fhv_tripdata_2019' ~ '-' ~ (trigger.date | date('MM')) ~ '.csv']}}"
     to: "{{render(vars.gcs_file)}}"
 
   - id: purge_files
@@ -43,6 +43,6 @@ pluginDefaults:
       bucket: "{{kv('GCP_BUCKET_NAME')}}"
 
 triggers:
-  - id: green_schedule
+  - id: fhv_schedule
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "0 9 1 * *"
