@@ -1,0 +1,48 @@
+id: load_fhx_data_2019
+namespace: zoomcamp
+description: |
+  The data used belongs to https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/fhv
+
+variables:
+  file: "fhv_tripdata_2019-{{trigger.date | date('MM')}}.csv"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/fhv/{{vars.file}}"
+  url: "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/{{vars.file}}"
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      year: "2019"
+
+  - id: download
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "*.csv"
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -qO- {{render(vars.url)}}.gz | gunzip > {{render(vars.file)}}
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{outputs.download.outputFiles['fhv_tripdata_2019' ~ '-' ~ (trigger.date | date('MM')) ~ '.csv']}}"
+    to: "{{render(vars.gcs_file)}}"
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: fhv_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"
