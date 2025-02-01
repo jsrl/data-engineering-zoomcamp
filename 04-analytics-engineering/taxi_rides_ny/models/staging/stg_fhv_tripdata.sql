@@ -6,8 +6,8 @@
 
 select
     dispatching_base_num,
-    cast(PULocationID as integer) as pickup_location,
-    cast(DOLocationID as integer) as dropoff_location,
+    cast(PULocationID as integer) as pickup_locationid,
+    cast(DOLocationID as integer) as dropoff_locationid,
 
     -- timestamps
     cast(pickup_datetime as timestamp) as pickup_datetime,
