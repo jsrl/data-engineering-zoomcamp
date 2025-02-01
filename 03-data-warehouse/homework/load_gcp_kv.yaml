@@ -15,7 +15,7 @@ tasks:
     type: io.kestra.plugin.core.kv.Set
     key: GCP_PROJECT_ID
     kvType: STRING
-    value: neat-axis-448121-i4 # Replace with your project id
+    value: # Replace with your project id
 
   - id: gcp_location
     type: io.kestra.plugin.core.kv.Set
