@@ -52,6 +52,10 @@ Run the dbt model without limits (is_test_run: false).
 - 32998722
 - 42998722
 
+```sql
+select count(*) from {{ ref('fact_fhv_trips') }}
+```
+
 ### Question 4 (2 points)
 
 **What is the service that had the most rides during the month of July 2019 month with the biggest amount of rides after building a tile for the fact_fhv_trips table and the fact_trips tile as seen in the videos?**
