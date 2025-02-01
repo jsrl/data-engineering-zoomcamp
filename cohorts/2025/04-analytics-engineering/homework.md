@@ -24,7 +24,7 @@ instead. If you have access to GCP, you don't need to do it for local Postgres -
 You'll need to have completed the ["Build the first dbt models"](https://www.youtube.com/watch?v=UVI30Vxzd6c) video. 
 - It's the same as running *dbt build*
 - It applies a _limit 100_ to all of our models
-- It applies a _limit 100_ only to our staging models
+- **It applies a _limit 100_ only to our staging models <-**
 - Nothing
 
 ### Question 2: 
@@ -34,7 +34,7 @@ You'll need to have completed the ["Build the first dbt models"](https://www.you
 - The code that has been merged into the main branch
 - The code that is behind the creation object on the dbt_cloud_pr_ schema
 - The code from any development branch that has been opened based on main
-- The code from the development branch we are requesting to merge to main
+- **The code from the development branch we are requesting to merge to main <--**
 
 
 ### Question 3 (2 points)
@@ -48,7 +48,7 @@ Similar to what we've done in fact_trips, keep only records with known pickup an
 Run the dbt model without limits (is_test_run: false).
 
 - 12998722
-- 22998722
+- **22998722 <-**
 - 32998722
 - 42998722
 
@@ -60,7 +60,7 @@ Create a dashboard with some tiles that you find interesting to explore the data
 
 - FHV
 - Green
-- Yellow
+- **Yellow <-**
 - FHV and Green
 
 
