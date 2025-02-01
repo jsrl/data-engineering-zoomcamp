@@ -86,6 +86,10 @@ select * from green_yellow
 union all
 select * from fhv
 ```
+Fhv -> 290680	
+Yellow -> 3249350	
+Green -> 415402
+
 
 ## Submitting the solutions
 
