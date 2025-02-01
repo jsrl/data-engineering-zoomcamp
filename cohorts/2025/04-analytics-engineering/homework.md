@@ -67,6 +67,25 @@ Create a dashboard with some tiles that you find interesting to explore the data
 - **Yellow <-**
 - FHV and Green
 
+```sql
+with green_yellow as (
+    select service_type, count(*) as total_records
+    from `prod.fact_trips`
+    where extract(year from pickup_datetime) = 2019
+    and extract(month from pickup_datetime) = 7
+    group by 1
+),
+fhv as (
+   select service_type, count(*)  as total_records
+    from  `prod.fact_fhv_trips`
+    where extract(year from pickup_datetime) = 2019
+    and extract(month from pickup_datetime) = 7
+    group by 1 
+)
+select * from green_yellow
+union all
+select * from fhv
+```
 
 ## Submitting the solutions
 
