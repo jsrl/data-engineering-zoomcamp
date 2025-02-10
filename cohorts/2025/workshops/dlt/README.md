@@ -1,5 +1,8 @@
 # Data ingestion with dlt
-🔗 Sign up here (optional): https://lu.ma/quyfn4q8 
+
+* 🔗 Sign up here (optional): https://lu.ma/quyfn4q8 
+* Homework: [dlt_homework.md](dlt_homework.md)
+
 
 Welcome to this hands-on workshop, where you'll learn to build efficient and scalable data ingestion pipelines.
 
@@ -23,7 +26,7 @@ By the end of this workshop, you'll be able to build data pipelines like a senio
   - [Workshop content](data_ingestion_workshop.md).
   - [Workshop Colab Notebook](https://colab.research.google.com/drive/1FiAHNFenM8RyptyTPtDTfqPCi5W6KX_V?usp=sharing).
 - Homework:
-  - [Homework Markdown](homework.md).
+  - [Homework Markdown](dlt_homework.md).
   - [Homework Colab Notebook](https://colab.research.google.com/drive/1plqdl33K_HkVx0E0nGJrrkEUssStQsW7).
 - 🌐 [Official dlt Documentation](https://dlthub.com/docs/intro).
 - 💬 Join our [Slack Community](https://dlthub.com/community).
@@ -58,7 +61,7 @@ I'm Violetta Mishechkina, Solutions Engineer at dltHub. 👋
 
 ## Homework
 
-- [Homework Markdown](homework.md).
+- [Homework Markdown](dlt_homework.md).
 - [Homework Colab Notebook](https://colab.research.google.com/drive/1plqdl33K_HkVx0E0nGJrrkEUssStQsW7).
 
 --- 
@@ -100,7 +103,6 @@ If you create a personal project, consider submitting it to our blog - we will b
 
 ## **💛 If you enjoy dlt, support us!**  
 
-⭐ **Give us a [GitHub Star](https://github.com/dlt-hub/dlt)!**  
-💬 **Join our [Slack Community](https://dlthub.com/community)!**  
-
-🚀 **Let’s build great data pipelines together!**  
+* ⭐ **Give us a [GitHub Star](https://github.com/dlt-hub/dlt)!**  
+* 💬 **Join our [Slack Community](https://dlthub.com/community)!**  
+* 🚀 **Let’s build great data pipelines together!**  
