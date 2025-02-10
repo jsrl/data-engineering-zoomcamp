@@ -39,8 +39,11 @@ import dlt
 print("dlt version:", dlt.__version__)
 ```
 
+
 **Answer**:  
 - Provide the **version** you see in the output.
+
+**dlt version: 1.6.1**
 
 ## **Question 2: Define & Run the Pipeline (NYC Taxi API)**
 
@@ -61,6 +64,18 @@ from dlt.sources.helpers.rest_client.paginators import PageNumberPaginator
 
 
 # your code is here
+@dlt.resource(name="rides")   # <--- The name of the resource (will be used as the table name)
+def ny_taxi():
+    client = RESTClient(
+        base_url="https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api",
+        paginator=PageNumberPaginator(
+            base_page=1,
+            total_path=None
+        )
+    )
+
+    for page in client.paginate("data_engineering_zoomcamp_api"):    # <--- API endpoint for retrieving taxi ride data
+        yield page   # <--- yield data to manage memory
 
 
 pipeline = dlt.pipeline(
@@ -75,6 +90,14 @@ Load the data into DuckDB to test:
 load_info = pipeline.run(ny_taxi)
 print(load_info)
 ```
+```py
+Pipeline ny_taxi_pipeline load step completed in 2.36 seconds
+1 load package(s) were loaded to destination duckdb and into dataset ny_taxi_data
+The duckdb destination used duckdb:////content/ny_taxi_pipeline.duckdb location to store data
+Load package 1739213448.640445 is LOADED and contains no failed jobs
+```
+
+
 Start a connection to your database using native `duckdb` connection and look what tables were generated:"""
 
 ```py
@@ -95,11 +118,14 @@ conn.sql("DESCRIBE").df()
 
 ```
 
+
+
+
 **Answer:**
 * How many tables were created?
 
 * 2
-* 4
+* **4 <-** _dlt_loads,_dlt_pipeline_state, 	_dlt_version, 	rides
 * 6
 * 8
 
@@ -118,7 +144,7 @@ df
 * 2500
 * 5000
 * 7500
-* 10000
+* **10000 <-**
 
 ## **Question 4: Trip Duration Analysis**
 
@@ -142,7 +168,7 @@ with pipeline.sql_client() as client:
 **Answer:**
 * What is the average trip duration?
 
-* 12.3049
+* **12.3049 <--**
 * 22.3049
 * 32.3049
 * 42.3049
