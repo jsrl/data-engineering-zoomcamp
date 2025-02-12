@@ -41,7 +41,7 @@ print("dlt version:", dlt.__version__)
 
 
 **Answer**:  
-- Provide the **version** you see in the output.
+Provide the **version** you see in the output.
 
 **dlt version: 1.6.1**
 
@@ -118,11 +118,7 @@ conn.sql("DESCRIBE").df()
 
 ```
 
-
-
-
-**Answer:**
-* How many tables were created?
+How many tables were created?
 
 * 2
 * **4 <-** _dlt_loads,_dlt_pipeline_state, 	_dlt_version, 	rides
@@ -138,8 +134,7 @@ df = pipeline.dataset(dataset_type="default").rides.df()
 df
 ```
 
-**Answer:**
-* What is the total number of records extracted?
+What is the total number of records extracted?
 
 * 2500
 * 5000
@@ -165,8 +160,7 @@ with pipeline.sql_client() as client:
     print(res)
 ```
 
-**Answer:**
-* What is the average trip duration?
+What is the average trip duration?
 
 * **12.3049 <--**
 * 22.3049
