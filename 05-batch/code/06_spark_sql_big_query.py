@@ -25,7 +25,7 @@ spark = SparkSession.builder \
     .appName('test') \
     .getOrCreate()
 
-spark.conf.set('temporaryGcsBucket', 'dataproc-temp-europe-west6-828225226997-fckhkym8')
+spark.conf.set('temporaryGcsBucket', 'dataproc-temp-us-central1-109120138585-wmjnuonq')
 
 df_green = spark.read.parquet(input_green)
 
@@ -75,7 +75,7 @@ df_yellow_sel = df_yellow \
 
 df_trips_data = df_green_sel.unionAll(df_yellow_sel)
 
-df_trips_data.registerTempTable('trips_data')
+df_trips_data.createOrReplaceTempView('trips_data')
 
 
 df_result = spark.sql("""
