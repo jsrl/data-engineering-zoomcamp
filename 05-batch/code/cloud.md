@@ -10,8 +10,10 @@ gsutil -m cp -r pq/ gs://dtc_data_lake_de-zoomcamp-nytaxi/pq
 
 Download the jar for connecting to GCS to any location (e.g. the `lib` folder):
 
+**Note**: For other versions of GCS connector for Hadoop see [Cloud Storage connector ](https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#connector-setup-on-non-dataproc-clusters).
+
 ```bash
-gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar
+gsutil cp gs://hadoop-lib/gcs/gcs-connector-hadoop3-2.2.5.jar ./lib/
 ```
 
 See the notebook with configuration in [09_spark_gcs.ipynb](09_spark_gcs.ipynb)
@@ -70,7 +72,7 @@ spark-submit \
 Upload the script to GCS:
 
 ```bash
-gsutil cp 06_spark_sql.py gs://taxis-bucket-448121-i4/batch/code/06_spark_sql.py
+gsutil -m cp -r 06_spark_sql.py gs://dtc_data_lake_de-zoomcamp-nytaxi/code/06_spark_sql.py
 ```
 
 Params for the job:
@@ -99,7 +101,7 @@ gcloud dataproc jobs submit pyspark \
 Upload the script to GCS:
 
 ```bash
-gsutil cp 06_spark_sql_big_query.py gs://taxis-bucket-448121-i4/batch/code/06_spark_sql_big_query.py
+gsutil -m cp -r 06_spark_sql_big_query.py gs://dtc_data_lake_de-zoomcamp-nytaxi/code/06_spark_sql_big_query.py
 ```
 
 Write results to big query ([docs](https://cloud.google.com/dataproc/docs/tutorials/bigquery-connector-spark-example#pyspark)):
@@ -107,14 +109,16 @@ Write results to big query ([docs](https://cloud.google.com/dataproc/docs/tutori
 ```bash
 gcloud dataproc jobs submit pyspark \
     --cluster=de-zoomcamp-cluster \
-    --region=us-central1 \
-    gs://taxis-bucket-448121-i4/batch/code/06_spark_sql_big_query.py \
+    --region=europe-west6 \
+    --jars=gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar \
+    gs://dtc_data_lake_de-zoomcamp-nytaxi/code/06_spark_sql_big_query.py \
     -- \
-        --input_green=gs://taxis-bucket-448121-i4/batch/pq/green/2020/*/ \
-        --input_yellow=gs://taxis-bucket-448121-i4/batch/pq/yellow/2020/*/ \
+        --input_green=gs://dtc_data_lake_de-zoomcamp-nytaxi/pq/green/2020/*/ \
+        --input_yellow=gs://dtc_data_lake_de-zoomcamp-nytaxi/pq/yellow/2020/*/ \
         --output=trips_data_all.reports-2020
 ```
 
 There can be issue with latest Spark version and the Big query connector. Download links to the jar file for respective Spark versions can be found at:
 [Spark and Big query connector](https://github.com/GoogleCloudDataproc/spark-bigquery-connector)
 
+**Note**: Dataproc on GCE 2.1+ images pre-install Spark BigQquery connector: [DataProc Release 2.2](https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-2.2). Therefore, no need to include the jar file in the job submission.
